@@ -599,7 +599,7 @@ const SUPABASE_ANON_KEY =
 
 let beneficiaries=[];
 
-function submitComplaint(){
+async function submitComplaint(){
 
 const name =
 document.getElementById("complaintName").value.trim();
@@ -631,7 +631,23 @@ return;
 
 const id =
 "PK-"+String(Date.now()).slice(-6);
-
+await fetch(SUPABASE_URL + "/rest/v1/complaints", {
+  method: "POST",
+  headers: {
+    "apikey": SUPABASE_ANON_KEY,
+    "Authorization": "Bearer " + SUPABASE_ANON_KEY,
+    "Content-Type": "application/json",
+    "Prefer": "return=minimal"
+  },
+  body: JSON.stringify({
+    complaint_id: id,
+    name: name,
+    mobile: mobile,
+    block: block,
+    subject: subject,
+    description: text
+  })
+});
 result.style.display="block";
 
 result.innerHTML =
