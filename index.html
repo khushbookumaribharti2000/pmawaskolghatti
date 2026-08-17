@@ -1,138 +1,276 @@
 <!DOCTYPE html>
 <html lang="hi">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PM Awas Kolghatti</title>
 
-  <title>PM Awas Kolghatti</title>
+<style>
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
 
-  <style>
-    * {
-      box-sizing: border-box;
-    }
+body{
+  margin:0;
+  font-family:Arial,"Noto Sans Devanagari",sans-serif;
+  background:#f5f7fb;
+  color:#172033
+}
 
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      background: #f5f7fb;
-      color: #222;
-    }
+header{
+  background:linear-gradient(135deg,#0f172a,#1d4ed8);
+  color:#fff;
+  padding:24px 15px 30px;
+  text-align:center
+}
 
-    header {
-      background: linear-gradient(135deg, #0f172a, #1d4ed8);
-      color: white;
-      padding: 28px 15px;
-      text-align: center;
-    }
+header h1{
+  margin:0;
+  font-size:30px
+}
 
-    header h1 {
-      margin: 0;
-      font-size: 30px;
-    }
+header p{
+  margin:8px 0 0;
+  font-size:15px
+}
 
-    header p {
-      margin: 8px 0 0;
-      font-size: 15px;
-    }
+nav{
+  position:sticky;
+  top:0;
+  z-index:20;
+  background:#fff;
+  box-shadow:0 2px 10px rgba(0,0,0,.08);
+  display:flex;
+  gap:8px;
+  overflow-x:auto;
+  padding:10px
+}
 
-    .container {
-      max-width: 1100px;
-      margin: auto;
-      padding: 20px 15px;
-    }
+nav a{
+  white-space:nowrap;
+  text-decoration:none;
+  color:#1e3a8a;
+  font-weight:700;
+  padding:10px 13px;
+  border-radius:10px;
+  background:#eff6ff
+}
 
-    .search-box {
-      background: white;
-      padding: 18px;
-      border-radius: 14px;
-      box-shadow: 0 3px 12px rgba(0,0,0,0.08);
-      margin-bottom: 20px;
-    }
+.container{
+  max-width:1100px;
+  margin:auto;
+  padding:18px 15px
+}
 
-    .search-box input {
-      width: 100%;
-      padding: 14px;
-      border: 1px solid #d1d5db;
-      border-radius: 10px;
-      font-size: 16px;
-      outline: none;
-    }
+.hero{
+  background:#fff;
+  border-radius:18px;
+  padding:24px;
+  margin-bottom:18px;
+  box-shadow:0 3px 12px rgba(0,0,0,.07)
+}
 
-    .search-box input:focus {
-      border-color: #2563eb;
-    }
+.hero h2{
+  margin:0 0 8px;
+  color:#1d4ed8
+}
 
-    .count {
-      margin-top: 10px;
-      font-size: 14px;
-      color: #555;
-    }
+.quick-grid{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:12px;
+  margin:18px 0
+}
 
-    .loading {
-      text-align: center;
-      padding: 40px;
-      font-size: 18px;
-    }
+.quick-card{
+  background:#fff;
+  border-radius:16px;
+  padding:18px;
+  text-align:center;
+  text-decoration:none;
+  color:#172033;
+  box-shadow:0 3px 12px rgba(0,0,0,.07)
+}
 
-    .error {
-      background: #fee2e2;
-      color: #991b1b;
-      padding: 15px;
-      border-radius: 10px;
-      margin-bottom: 20px;
-    }
+.quick-card .icon{
+  font-size:30px
+}
 
-    .table-wrapper {
-      background: white;
-      border-radius: 14px;
-      overflow-x: auto;
-      box-shadow: 0 3px 12px rgba(0,0,0,0.08);
-    }
+.quick-card strong{
+  display:block;
+  margin-top:8px
+}
 
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      min-width: 750px;
-    }
+section{
+  scroll-margin-top:75px;
+  background:#fff;
+  border-radius:18px;
+  padding:20px;
+  margin:18px 0;
+  box-shadow:0 3px 12px rgba(0,0,0,.07)
+}
 
-    th {
-      background: #1d4ed8;
-      color: white;
-      padding: 14px 12px;
-      text-align: left;
-      white-space: nowrap;
-    }
+section h2{
+  margin:0 0 15px;
+  color:#1d4ed8
+}
 
-    td {
-      padding: 13px 12px;
-      border-bottom: 1px solid #e5e7eb;
-    }
+.notice{
+  border-left:5px solid #1d4ed8;
+  background:#eff6ff;
+  padding:15px;
+  border-radius:10px;
+  margin:10px 0
+}
 
-    tr:hover {
-      background: #f8fafc;
-    }
+.form-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:13px
+}
 
-    .sex {
-      font-weight: bold;
-    }
+label{
+  font-weight:700;
+  font-size:14px
+}
 
-    footer {
-      text-align: center;
-      padding: 25px 15px;
-      color: #666;
-      font-size: 14px;
-    }
+input,select,textarea{
+  width:100%;
+  margin-top:6px;
+  padding:12px;
+  border:1px solid #d1d5db;
+  border-radius:10px;
+  font-size:15px
+}
 
-    @media (max-width: 600px) {
-      header h1 {
-        font-size: 24px;
-      }
+textarea{
+  min-height:120px;
+  resize:vertical
+}
 
-      .container {
-        padding: 15px 10px;
-      }
-    }
-  </style>
+.full{
+  grid-column:1/-1
+}
+
+button{
+  border:0;
+  border-radius:10px;
+  padding:12px 18px;
+  background:#1d4ed8;
+  color:#fff;
+  font-weight:700;
+  font-size:15px;
+  cursor:pointer
+}
+
+button:hover{
+  background:#1e40af
+}
+
+.result{
+  margin-top:14px;
+  padding:14px;
+  border-radius:10px;
+  background:#f0fdf4;
+  border:1px solid #bbf7d0;
+  display:none
+}
+
+.contact-grid{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:14px
+}
+
+.contact-card{
+  background:#f8fafc;
+  padding:16px;
+  border-radius:12px
+}
+
+.search-box{
+  background:white;
+  padding:18px;
+  border-radius:14px;
+  border:1px solid #e5e7eb;
+  margin-bottom:15px
+}
+
+.count{
+  margin-top:9px;
+  font-size:14px;
+  color:#555
+}
+
+.loading{
+  text-align:center;
+  padding:35px;
+  font-size:17px
+}
+
+.error{
+  background:#fee2e2;
+  color:#991b1b;
+  padding:15px;
+  border-radius:10px;
+  margin-bottom:15px
+}
+
+.table-wrapper{
+  background:white;
+  border-radius:14px;
+  overflow-x:auto
+}
+
+table{
+  width:100%;
+  border-collapse:collapse;
+  min-width:750px
+}
+
+th{
+  background:#1d4ed8;
+  color:#fff;
+  padding:13px 12px;
+  text-align:left
+}
+
+td{
+  padding:12px;
+  border-bottom:1px solid #e5e7eb
+}
+
+footer{
+  text-align:center;
+  padding:28px 15px;
+  color:#666;
+  font-size:14px
+}
+
+.small{
+  font-size:13px;
+  color:#6b7280
+}
+
+@media(max-width:700px){
+
+  header h1{
+    font-size:24px
+  }
+
+  .quick-grid{
+    grid-template-columns:repeat(2,1fr)
+  }
+
+  .form-grid,
+  .contact-grid{
+    grid-template-columns:1fr
+  }
+
+  .full{
+    grid-column:auto
+  }
+}
+</style>
 </head>
 
 <body>
@@ -142,333 +280,557 @@
   <p>प्रधानमंत्री आवास योजना – कोलघट्टी, हजारीबाग</p>
 </header>
 
+<nav>
+  <a href="#shikayat">📝 शिकायत</a>
+  <a href="#track">🔎 Track</a>
+  <a href="#notice">📢 Notice</a>
+  <a href="#contact">📞 Contact</a>
+</nav>
+
 <main class="container">
 
-  <div class="search-box">
-    <input
-      type="text"
-      id="searchInput"
-      placeholder="नाम, पिता/पति का नाम, ब्लॉक या फ्लैट खोजें..."
-    >
+<div class="hero">
+  <h2>PM Awas Kolghatti Society</h2>
+  <p>
+    सोसाइटी की सूचना, शिकायत और संपर्क की जानकारी
+    एक ही स्थान पर।
+  </p>
+</div>
 
-    <div class="count" id="count">
-      Data लोड हो रहा है...
-    </div>
-  </div>
+<div class="quick-grid">
 
-  <div id="errorBox"></div>
+<a class="quick-card" href="#shikayat">
+  <div class="icon">📝</div>
+  <strong>शिकायत दर्ज करें</strong>
+</a>
 
-  <div id="loading" class="loading">
-    Beneficiary data लोड हो रहा है...
-  </div>
+<a class="quick-card" href="#track">
+  <div class="icon">🔎</div>
+  <strong>शिकायत Track करें</strong>
+</a>
 
-  <div class="table-wrapper" id="tableWrapper" style="display:none;">
+<a class="quick-card" href="#notice">
+  <div class="icon">📢</div>
+  <strong>Notice / सूचना</strong>
+</a>
 
-    <table>
-      <thead>
-        <tr>
-          <th>क्रमांक</th>
-          <th>नाम</th>
-          <th>Father / Husband Name</th>
-          <th>Sex</th>
-          <th>Block</th>
-          <th>Flat</th>
-        </tr>
-      </thead>
+<a class="quick-card" href="#contact">
+  <div class="icon">📞</div>
+  <strong>Contact / संपर्क</strong>
+</a>
 
-      <tbody id="beneficiaryTable"></tbody>
+</div>
 
-    </table>
+<section id="shikayat">
 
-  </div>
+<h2>📝 शिकायत दर्ज करें</h2>
+
+<div class="form-grid">
+
+<div>
+<label>नाम</label>
+<input id="complaintName" type="text" placeholder="अपना नाम">
+</div>
+
+<div>
+<label>मोबाइल नंबर</label>
+<input id="complaintMobile" type="tel"
+maxlength="10"
+placeholder="10 अंकों का मोबाइल नंबर">
+</div>
+
+<div>
+<label>ब्लॉक</label>
+
+<select id="complaintBlock">
+
+<option value="">ब्लॉक चुनें</option>
+<option>A</option>
+<option>B</option>
+<option>C</option>
+<option>D</option>
+<option>E</option>
+<option>F</option>
+<option>G</option>
+<option>H</option>
+
+</select>
+</div>
+
+<div>
+
+<label>शिकायत का विषय</label>
+
+<select id="complaintSubject">
+
+<option value="">विषय चुनें</option>
+<option>पानी</option>
+<option>बिजली</option>
+<option>सफाई</option>
+<option>नाली / सीवरेज</option>
+<option>स्ट्रीट लाइट</option>
+<option>सुरक्षा</option>
+<option>कॉमन एरिया</option>
+<option>अन्य</option>
+
+</select>
+
+</div>
+
+<div class="full">
+
+<label>शिकायत का विवरण</label>
+
+<textarea id="complaintText"
+placeholder="अपनी समस्या विस्तार से लिखें..."></textarea>
+
+</div>
+
+<div class="full">
+
+<button onclick="submitComplaint()">
+शिकायत Submit करें
+</button>
+
+</div>
+
+</div>
+
+<div id="complaintResult" class="result"></div>
+
+<p class="small">
+शिकायत को database में सुरक्षित रूप से सेव करने की सुविधा
+अगले चरण में जोड़ी जाएगी।
+</p>
+
+</section>
+
+<section id="track">
+
+<h2>🔎 शिकायत Track करें</h2>
+
+<div class="form-grid">
+
+<div>
+
+<label>Complaint ID</label>
+
+<input id="trackId"
+type="text"
+placeholder="जैसे PK-0001">
+
+</div>
+
+<div style="display:flex;align-items:end">
+
+<button onclick="trackComplaint()">
+🔎 Track करें
+</button>
+
+</div>
+
+</div>
+
+<div id="trackResult" class="result"></div>
+
+</section>
+
+<section id="notice">
+
+<h2>📢 Notice / सूचना</h2>
+
+<div class="notice">
+
+<h3>महत्वपूर्ण सूचना</h3>
+
+<p>
+PM Awas Kolghatti Society की नई सूचना यहाँ
+प्रदर्शित की जाएगी।
+</p>
+
+<p class="small">
+दिनांक: —
+</p>
+
+</div>
+
+<div class="notice">
+
+<h3>बैठक संबंधी सूचना</h3>
+
+<p>
+सोसाइटी की बैठक से संबंधित तारीख,
+समय और स्थान की जानकारी यहाँ दिखाई जाएगी।
+</p>
+
+<p class="small">
+दिनांक: —
+</p>
+
+</div>
+
+</section>
+
+<section id="contact">
+
+<h2>📞 Contact / संपर्क</h2>
+
+<div class="contact-grid">
+
+<div class="contact-card">
+
+<strong>अध्यक्ष</strong>
+
+<p>नाम यहाँ दर्ज करें</p>
+
+<p>मोबाइल: __________</p>
+
+</div>
+
+<div class="contact-card">
+
+<strong>सचिव</strong>
+
+<p>नाम यहाँ दर्ज करें</p>
+
+<p>मोबाइल: __________</p>
+
+</div>
+
+</div>
+
+<p>
+<strong>📍 पता:</strong>
+PM Awas Kolghatti, Hazaribagh, Jharkhand
+</p>
+
+</section>
+
+<section>
+
+<h2>👥 Beneficiary Search</h2>
+
+<div class="search-box">
+
+<input
+type="text"
+id="searchInput"
+placeholder="नाम, पिता/पति का नाम, ब्लॉक या फ्लैट खोजें..."
+>
+
+<div class="count" id="count">
+Data लोड हो रहा है...
+</div>
+
+</div>
+
+<div id="errorBox"></div>
+
+<div id="loading" class="loading">
+Beneficiary data लोड हो रहा है...
+</div>
+
+<div class="table-wrapper"
+id="tableWrapper"
+style="display:none;">
+
+<table>
+
+<thead>
+
+<tr>
+
+<th>क्रमांक</th>
+<th>नाम</th>
+<th>Father / Husband Name</th>
+<th>Sex</th>
+<th>Block</th>
+<th>Flat</th>
+
+</tr>
+
+</thead>
+
+<tbody id="beneficiaryTable"></tbody>
+
+</table>
+
+</div>
+
+</section>
 
 </main>
 
 <footer>
-  © PM Awas Kolghatti
+© PM Awas Kolghatti
 </footer>
-
 
 <script>
 
-  /* ==========================================
-     SUPABASE SETTINGS
-     ========================================== */
+const SUPABASE_URL =
+"https://cmzqcqrptqjbxugagnue.supabase.co";
 
-  const SUPABASE_URL = "https://cmzqcqrptqjbxugagnue.supabase.co";
+const SUPABASE_ANON_KEY =
+"sb_publishable_-QGSDfNjeHdCY_IpyQt12Q_c-Exsvyt";
 
-  const SUPABASE_ANON_KEY = "sb_publishable_-QGSDfNjeHdCY_IpyQt12Q_c-Exsvyt";
+let beneficiaries=[];
 
+function submitComplaint(){
 
-  /* ==========================================
-     DATA
-     ========================================== */
+const name =
+document.getElementById("complaintName").value.trim();
 
-  let beneficiaries = [];
+const mobile =
+document.getElementById("complaintMobile").value.trim();
 
+const block =
+document.getElementById("complaintBlock").value;
 
-  /* ==========================================
-     LOAD BENEFICIARY DATA
-     ========================================== */
+const subject =
+document.getElementById("complaintSubject").value;
 
-  async function loadBeneficiaries() {
+const text =
+document.getElementById("complaintText").value.trim();
 
-    const loading =
-      document.getElementById("loading");
+const result =
+document.getElementById("complaintResult");
 
-    const tableWrapper =
-      document.getElementById("tableWrapper");
+if(!name || !mobile || !block || !subject || !text){
 
-    const errorBox =
-      document.getElementById("errorBox");
+result.style.display="block";
 
-    try {
+result.innerHTML =
+"⚠️ कृपया सभी आवश्यक जानकारी भरें।";
 
-      const url =
-        SUPABASE_URL +
-        "/rest/v1/Beneficiary" +
-        "?select=beneficiary_name,father_husband_name,sex,block,flat_number" +
-        "&order=beneficiary_name.asc";
+return;
+}
 
-      const response = await fetch(url, {
+const id =
+"PK-"+String(Date.now()).slice(-6);
 
-        method: "GET",
+result.style.display="block";
 
-        headers: {
-          "apikey": SUPABASE_ANON_KEY,
-          "Authorization":
-            "Bearer " + SUPABASE_ANON_KEY
-        }
+result.innerHTML =
+"<strong>✅ शिकायत दर्ज करने के लिए तैयार है</strong><br><br>"+
+"Complaint ID: <strong>"+escapeHTML(id)+
+"</strong><br><br>"+
+"<span class='small'>"+
+"Database जोड़ने के बाद यही ID आपकी शिकायत के साथ स्थायी रूप से सेव होगी।"+
+"</span>";
 
-      });
+}
 
+function trackComplaint(){
 
-      if (!response.ok) {
+const id =
+document.getElementById("trackId")
+.value.trim()
+.toUpperCase();
 
-        const errorText =
-          await response.text();
+const result =
+document.getElementById("trackResult");
 
-        throw new Error(
-          "Supabase error: " +
-          response.status +
-          " " +
-          errorText
-        );
-      }
+result.style.display="block";
 
+if(!id){
 
-      beneficiaries =
-        await response.json();
+result.innerHTML="⚠️ Complaint ID डालें।";
 
+return;
 
-      loading.style.display = "none";
+}
 
-      tableWrapper.style.display = "block";
+result.innerHTML =
+"<strong>Complaint ID:</strong> "+
+escapeHTML(id)+
+"<br><br>"+
+"<strong>स्थिति:</strong> 🟡 जांच में"+
+"<br><br>"+
+"<strong>Action Taken:</strong> "+
+"Database जोड़ने के बाद वास्तविक शिकायत की स्थिति यहाँ दिखाई जाएगी।";
 
-      displayData(beneficiaries);
+}
 
+async function loadBeneficiaries(){
 
-    } catch (error) {
+const loading =
+document.getElementById("loading");
 
-      loading.style.display = "none";
+const tableWrapper =
+document.getElementById("tableWrapper");
 
-      errorBox.innerHTML = `
-        <div class="error">
-          <strong>Data load नहीं हो पाया।</strong>
-          <br><br>
-          ${escapeHTML(error.message)}
-        </div>
-      `;
+const errorBox =
+document.getElementById("errorBox");
 
-      console.error(error);
+try{
 
-    }
+const url =
+SUPABASE_URL+
+"/rest/v1/Beneficiary?select=beneficiary_name,father_husband_name,sex,block,flat_number&order=beneficiary_name.asc";
 
-  }
+const response =
+await fetch(url,{
 
+method:"GET",
 
-  /* ==========================================
-     DISPLAY DATA
-     ========================================== */
+headers:{
+"apikey":SUPABASE_ANON_KEY,
+"Authorization":
+"Bearer "+SUPABASE_ANON_KEY
+}
 
-  function displayData(data) {
+});
 
-    const table =
-      document.getElementById("beneficiaryTable");
+if(!response.ok){
 
-    const count =
-      document.getElementById("count");
+throw new Error(
+"Supabase error: "+
+response.status
+);
 
+}
 
-    table.innerHTML = "";
+beneficiaries =
+await response.json();
 
+loading.style.display="none";
 
-    count.innerText =
-      "कुल Beneficiaries: " + data.length;
+tableWrapper.style.display="block";
 
+displayData(beneficiaries);
 
-    if (data.length === 0) {
+}catch(error){
 
-      table.innerHTML = `
-        <tr>
-          <td
-            colspan="6"
-            style="text-align:center;padding:30px;"
-          >
-            कोई रिकॉर्ड नहीं मिला।
-          </td>
-        </tr>
-      `;
+loading.style.display="none";
 
-      return;
-    }
+errorBox.innerHTML =
+"<div class='error'>"+
+"<strong>Data load नहीं हो पाया।</strong>"+
+"<br><br>"+
+escapeHTML(error.message)+
+"</div>";
 
+}
 
-    data.forEach((person, index) => {
+}
 
-      const row =
-        document.createElement("tr");
+function displayData(data){
 
+const table =
+document.getElementById("beneficiaryTable");
 
-      row.innerHTML = `
+const count =
+document.getElementById("count");
 
-        <td>
-          ${index + 1}
-        </td>
+table.innerHTML="";
 
-        <td>
-          ${escapeHTML(
-            person.beneficiary_name
-          )}
-        </td>
+count.innerText =
+"कुल Beneficiaries: "+data.length;
 
-        <td>
-          ${escapeHTML(
-            person.father_husband_name
-          )}
-        </td>
+if(data.length===0){
 
-        <td class="sex">
-          ${escapeHTML(
-            person.sex
-          )}
-        </td>
+table.innerHTML =
+"<tr><td colspan='6' style='text-align:center;padding:30px;'>"+
+"कोई रिकॉर्ड नहीं मिला।"+
+"</td></tr>";
 
-        <td>
-          ${escapeHTML(
-            person.block
-          )}
-        </td>
+return;
 
-        <td>
-          ${escapeHTML(
-            person.flat_number
-          )}
-        </td>
+}
 
-      `;
+data.forEach((person,index)=>{
 
+const row =
+document.createElement("tr");
 
-      table.appendChild(row);
+row.innerHTML=
 
-    });
+"<td>"+(index+1)+"</td>"+
 
-  }
+"<td>"+
+escapeHTML(person.beneficiary_name)+
+"</td>"+
 
+"<td>"+
+escapeHTML(person.father_husband_name)+
+"</td>"+
 
-  /* ==========================================
-     SEARCH
-     ========================================== */
+"<td>"+
+escapeHTML(person.sex)+
+"</td>"+
 
-  document
-    .getElementById("searchInput")
-    .addEventListener(
-      "input",
-      function () {
+"<td>"+
+escapeHTML(person.block)+
+"</td>"+
 
-        const search =
-          this.value
-            .trim()
-            .toLowerCase();
+"<td>"+
+escapeHTML(person.flat_number)+
+"</td>";
 
+table.appendChild(row);
 
-        if (search === "") {
+});
 
-          displayData(beneficiaries);
+}
 
-          return;
+document
+.getElementById("searchInput")
+.addEventListener("input",function(){
 
-        }
+const search =
+this.value.trim().toLowerCase();
 
+if(search===""){
 
-        const filtered =
-          beneficiaries.filter(person => {
+displayData(beneficiaries);
 
-            const name =
-              (person.beneficiary_name || "")
-              .toLowerCase();
+return;
 
-            const father =
-              (person.father_husband_name || "")
-              .toLowerCase();
+}
 
-            const sex =
-              (person.sex || "")
-              .toLowerCase();
+const filtered =
+beneficiaries.filter(person=>{
 
-            const block =
-              (person.block || "")
-              .toLowerCase();
+const fields=[
 
-            const flat =
-              (person.flat_number || "")
-              .toLowerCase();
+person.beneficiary_name,
+person.father_husband_name,
+person.sex,
+person.block,
+person.flat_number
 
+].map(v=>
+(v||"").toLowerCase()
+);
 
-            return (
-              name.includes(search) ||
-              father.includes(search) ||
-              sex.includes(search) ||
-              block.includes(search) ||
-              flat.includes(search)
-            );
+return fields.some(v=>
+v.includes(search)
+);
 
-          });
+});
 
+displayData(filtered);
 
-        displayData(filtered);
+});
 
-      }
-    );
+function escapeHTML(value){
 
+if(value===null ||
+value===undefined)
 
-  /* ==========================================
-     SECURITY
-     ========================================== */
+return "";
 
-  function escapeHTML(value) {
+return String(value)
 
-    if (
-      value === null ||
-      value === undefined
-    ) {
-      return "";
-    }
+.replace(/&/g,"&amp;")
+.replace(/</g,"&lt;")
+.replace(/>/g,"&gt;")
+.replace(/"/g,"&quot;")
+.replace(/'/g,"&#039;");
 
-    return String(value)
-      .replace(/&/g, "&amp;")
-      .replace(/</g, "&lt;")
-      .replace(/>/g, "&gt;")
-      .replace(/"/g, "&quot;")
-      .replace(/'/g, "&#039;");
-  }
+}
 
-
-  /* ==========================================
-     START
-     ========================================== */
-
-  loadBeneficiaries();
+loadBeneficiaries();
 
 </script>
 
