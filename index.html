@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="hi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>PM Awas Kolghatti</title>
+<style>
+*{box-sizing:border-box}body{margin:0;font-family:Arial,"Noto Sans Devanagari",sans-serif;color:#142235;background:#f5f8fb}
+header{background:linear-gradient(135deg,#064e73,#0b83b8);color:#fff;padding:18px 6%;position:sticky;top:0;z-index:5}
+.brand{display:flex;align-items:center;gap:13px}.logo{width:54px;height:54px;border-radius:14px;background:#fff;color:#075985;display:grid;place-items:center;font-size:28px}.brand b{font-size:22px}
+nav{display:flex;gap:8px;flex-wrap:wrap;margin-top:15px}nav a{color:#fff;text-decoration:none;padding:9px 12px;border-radius:8px;background:#ffffff1c}
+.hero{padding:60px 6%;background:linear-gradient(135deg,#e4f6ff,#fff)}.hero h1{font-size:clamp(34px,7vw,60px);margin:0 0 12px}.hero p{font-size:18px;line-height:1.8;max-width:820px}.buttons{display:flex;gap:10px;flex-wrap:wrap}.btn{border:0;border-radius:9px;padding:12px 18px;font-weight:700;cursor:pointer;text-decoration:none;display:inline-block}.primary{background:#f97316;color:#fff}.blue{background:#075985;color:#fff}
+.container{max-width:1100px;margin:auto;padding:35px 6%}h2{font-size:28px}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:17px}.card{background:#fff;border-radius:15px;padding:22px;box-shadow:0 5px 20px #1232}.icon{font-size:30px}.notice{background:#fff;border-left:5px solid #f97316;padding:15px;border-radius:9px;margin:10px 0}
+form{max-width:780px;background:#fff;border-radius:15px;padding:22px;box-shadow:0 5px 20px #1232}label{display:block;font-weight:bold;margin:13px 0 6px}input,select,textarea{width:100%;padding:12px;border:1px solid #cbd5e1;border-radius:8px;font-size:15px}textarea{min-height:120px}.success{display:none;background:#e8f7ed;color:#146c36;padding:13px;border-radius:8px;margin-top:14px;font-weight:bold}
+.admin{background:#0f172a;color:#fff}.admin form{max-width:500px}.panel{display:none}.muted{font-size:14px;color:#64748b}footer{background:#0b2235;color:#fff;padding:30px 6%;margin-top:25px}
+</style>
+</head>
+<body>
+<header>
+<div class="brand"><div class="logo">🏠</div><div><b>PM Awas Kolghatti</b><div>प्रधानमंत्री आवास योजना (शहरी) – घटक 3</div></div></div>
+<nav><a href="#home">होम</a><a href="#about">हमारे बारे में</a><a href="#notice">सूचना</a><a href="#complaint">शिकायत</a><a href="#track">Track Complaint</a><a href="#suggestion">सुझाव</a><a href="#contact">संपर्क</a><a href="#admin">Admin</a></nav>
+</header>
+
+<section class="hero" id="home">
+<h1>PM Awas Kolghatti</h1>
+<p>कोलघट्टी, हजारीबाग में प्रधानमंत्री आवास योजना (शहरी) – घटक 3 के अंतर्गत निर्मित आवासीय सोसाइटी के सुचारू संचालन के लिए सूचना, शिकायत, सुझाव एवं संपर्क का डिजिटल पोर्टल।</p>
+<div class="buttons"><a class="btn primary" href="#complaint">📝 शिकायत दर्ज करें</a><a class="btn blue" href="#notice">📢 सूचना देखें</a></div>
+</section>
+
+<section class="container" id="about">
+<h2>🏢 सोसाइटी के बारे में</h2>
+<div class="card"><p>PM Awas Kolghatti आवासीय सोसाइटी, कोलघट्टी, हजारीबाग में स्थित है। वेबसाइट का उद्देश्य निवासियों तक आवश्यक सूचना पहुँचाना तथा शिकायत एवं सुझाव प्राप्त करना है।</p><p><b>महत्वपूर्ण:</b> वेबसाइट पर किसी आवंटी के व्यक्तिगत फ्लैट विवरण, नाम या मोबाइल नंबर सार्वजनिक रूप से प्रदर्शित नहीं किए जाएंगे।</p></div>
+</section>
+
+<section class="container">
+<div class="grid">
+<div class="card"><div class="icon">📢</div><h3>सूचना / Notice</h3><p>सोसाइटी की महत्वपूर्ण घोषणाएँ यहाँ प्रकाशित होंगी।</p></div>
+<div class="card"><div class="icon">📝</div><h3>शिकायत</h3><p>निवासी अपनी समस्या ऑनलाइन दर्ज कर सकते हैं।</p></div>
+<div class="card"><div class="icon">🔎</div><h3>शिकायत Tracking</h3><p>Complaint ID से शिकायत की स्थिति देख सकते हैं।</p></div>
+<div class="card"><div class="icon">💡</div><h3>सुझाव</h3><p>सोसाइटी को बेहतर बनाने के लिए सुझाव दें।</p></div>
+</div>
+</section>
+
+<section class="container" id="notice"><h2>📢 सूचना / Notice Board</h2>
+<div id="noticeList">
+<div class="notice"><b>महत्वपूर्ण सूचना:</b> सोसाइटी से संबंधित अधिकृत सूचनाएँ यहाँ प्रकाशित की जाएंगी।</div>
+<div class="notice"><b>रखरखाव सूचना:</b> पानी, बिजली, सफाई एवं अन्य सुविधाओं से संबंधित अपडेट यहाँ उपलब्ध होंगे।</div>
+</div></section>
+
+<section class="container" id="complaint"><h2>📝 शिकायत दर्ज करें</h2>
+<form id="complaintForm">
+<label>नाम</label><input id="name" required>
+<label>मोबाइल नंबर</label><input id="mobile" maxlength="10" inputmode="numeric" required>
+<label>शिकायत की श्रेणी</label>
+<select id="category" required><option value="">चुनें</option><option>पानी</option><option>बिजली</option><option>सफाई</option><option>सड़क / नाली</option><option>सुरक्षा</option><option>मरम्मत</option><option>अन्य</option></select>
+<label>शिकायत का विवरण</label><textarea id="details" required></textarea>
+<label>फोटो / दस्तावेज</label><input type="file" accept="image/*,.pdf">
+<button class="btn primary">शिकायत जमा करें</button>
+<div class="success" id="cs"></div>
+</form></section>
+
+<section class="container" id="track"><h2>🔎 Complaint Tracking</h2>
+<form id="trackForm"><label>Complaint ID</label><input id="tid" placeholder="जैसे PK-2026-123456" required><button class="btn blue">स्थिति देखें</button><div class="success" id="ts"></div></form></section>
+
+<section class="container" id="suggestion"><h2>💡 सुझाव / Feedback</h2>
+<form id="suggestionForm"><label>नाम</label><input required><label>मोबाइल नंबर</label><input maxlength="10" required><label>सुझाव</label><textarea required></textarea><button class="btn blue">सुझाव भेजें</button><div class="success" id="ss">धन्यवाद! आपका सुझाव प्राप्त हुआ।</div></form></section>
+
+<section class="container" id="contact"><h2>📞 संपर्क</h2>
+<div class="grid">
+<div class="card"><h3>सोसाइटी कार्यालय</h3><p>PM Awas Kolghatti<br>कोलघट्टी, हजारीबाग, झारखंड</p></div>
+<div class="card"><h3>हेल्पलाइन</h3><p>अधिकृत मोबाइल/हेल्पलाइन नंबर Admin द्वारा जोड़ा जा सकता है।</p></div>
+<div class="card"><h3>ईमेल</h3><p>अधिकृत ईमेल पता Admin द्वारा जोड़ा जा सकता है।</p></div>
+</div></section>
+
+<section class="container admin" id="admin"><h2>🔐 Admin Login</h2>
+<form id="login"><label>Username</label><input id="u" required><label>Password</label><input id="p" type="password" required><button class="btn primary">Login</button><p style="color:#94a3b8">Demo: admin / pmkolghatti2026</p></form>
+<div class="panel" id="panel"><h3>Admin Dashboard</h3><p>यहाँ से वास्तविक वेबसाइट में Notice, शिकायत और अन्य सामग्री manage की जा सकती है।</p>
+<form id="noticeForm"><label>नई सूचना का शीर्षक</label><input id="nt" required><label>विवरण</label><textarea id="nd" required></textarea><button class="btn blue">Publish Notice</button></form></div>
+</section>
+
+<footer><b>PM Awas Kolghatti</b><br>प्रधानमंत्री आवास योजना (शहरी) – घटक 3<br>कोलघट्टी, हजारीबाग, झारखंड<br><br><span class="muted">© 2026 PM Awas Kolghatti</span></footer>
+
+<script>
+const KEY="pk_complaints";
+function data(){return JSON.parse(localStorage.getItem(KEY)||"[]")}
+function save(x){localStorage.setItem(KEY,JSON.stringify(x))}
+function id(){return "PK-"+new Date().getFullYear()+"-"+Math.floor(100000+Math.random()*900000)}
+complaintForm.onsubmit=e=>{e.preventDefault();let x=data(),cid=id();x.push({id:cid,name:name.value,mobile:mobile.value,category:category.value,details:details.value,status:"प्राप्त",date:new Date().toLocaleString("hi-IN")});save(x);cs.style.display="block";cs.textContent="शिकायत दर्ज हो गई। आपकी Complaint ID: "+cid+" (इसे सुरक्षित रखें)";e.target.reset()}
+trackForm.onsubmit=e=>{e.preventDefault();let x=data().find(a=>a.id.toLowerCase()==tid.value.trim().toLowerCase());ts.style.display="block";ts.textContent=x?("Complaint ID "+x.id+" की स्थिति: "+x.status+" | श्रेणी: "+x.category):"Complaint ID नहीं मिली।"}
+suggestionForm.onsubmit=e=>{e.preventDefault();ss.style.display="block";e.target.reset()}
+login.onsubmit=e=>{e.preventDefault();if(u.value==="admin"&&p.value==="pmkolghatti2026"){login.style.display="none";panel.style.display="block"}else alert("गलत Username या Password")}
+noticeForm.onsubmit=e=>{e.preventDefault();noticeList.insertAdjacentHTML("afterbegin",'<div class="notice"><b>'+nt.value+':</b> '+nd.value+'</div>');e.target.reset();alert("सूचना प्रकाशित हुई (demo)")}
+</script>
+</body>
+</html>
