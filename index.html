@@ -1124,7 +1124,11 @@ async function publishNotice(){
       const errorData = await response.text();
 
       result.innerHTML =
-        "❌ Notice publish नहीं हुआ।";
+"❌ Notice publish नहीं हुआ. Status: " +
+response.status +
+" | Error: " +
+JSON.stringify(errorData);
+        
 
       console.log(errorData);
 
