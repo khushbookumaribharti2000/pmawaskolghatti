@@ -1178,5 +1178,75 @@ function escapeHTML(value){
     .replace(/'/g,"&#039;");
 }
   </script>
+  <!-- PUBLIC NOTICES -->
+<section style="max-width:700px;margin:30px auto;padding:20px;background:#fff;border-radius:16px;box-shadow:0 4px 20px rgba(0,0,0,.10);">
+
+  <h2>📢 नवीनतम सूचनाएँ</h2>
+
+  <div id="publicNotices">
+    ⏳ सूचनाएँ लोड हो रही हैं...
+  </div>
+
+</section>
+
+<script>
+async function loadPublicNotices(){
+
+  const box = document.getElementById("publicNotices");
+
+  try{
+
+    const response = await fetch(
+      SUPABASE_URL + "/rest/v1/notices?select=title,content,created_at&order=created_at.desc",
+      {
+        method:"GET",
+        headers:{
+          "apikey":SUPABASE_ANON_KEY,
+          "Authorization":"Bearer " + SUPABASE_ANON_KEY
+        }
+      }
+    );
+
+    const data = await response.json();
+
+    if(!response.ok){
+      box.innerHTML =
+        "❌ सूचना लोड नहीं हुई: " +
+        escapeHTML(JSON.stringify(data));
+      return;
+    }
+
+    if(!data.length){
+      box.innerHTML = "📭 अभी कोई सूचना उपलब्ध नहीं है।";
+      return;
+    }
+
+    box.innerHTML = data.map(notice => `
+      <div style="padding:15px;margin-bottom:12px;border:1px solid #ddd;border-radius:10px;">
+        <h3 style="margin-top:0;">
+          📢 ${escapeHTML(notice.title)}
+        </h3>
+
+        <div style="white-space:pre-wrap;">
+          ${escapeHTML(notice.content)}
+        </div>
+
+        <small>
+          ${notice.created_at ? new Date(notice.created_at).toLocaleString("hi-IN") : ""}
+        </small>
+      </div>
+    `).join("");
+
+  }catch(error){
+
+    box.innerHTML =
+      "❌ Error: " +
+      escapeHTML(error.message);
+
+  }
+}
+
+loadPublicNotices();
+</script>
 </body>
 </html>
