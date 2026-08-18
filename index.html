@@ -1046,7 +1046,11 @@ console.log("ADMIN ROWS:", admins);
       adminUser = null;
 
       result.innerHTML =
-        "❌ इस account को Admin permission नहीं मिली है।";
+        result.innerHTML =
+"❌ Admin permission नहीं मिली। Status: " +
+adminResponse.status +
+" | Rows: " +
+admins.length;
 
       return;
     }
