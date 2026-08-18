@@ -873,6 +873,300 @@ return String(value)
 loadBeneficiaries();
 
 </script>
+<!-- ================= ADMIN PANEL ================= -->
+<section id="adminPanel" style="
+  max-width:700px;
+  margin:40px auto;
+  padding:20px;
+  background:#fff;
+  border-radius:16px;
+  box-shadow:0 4px 20px rgba(0,0,0,.10);
+">
 
+  <h2 style="margin-top:0;">🔐 Admin Login</h2>
+
+  <div id="adminLoginBox">
+    <input
+      id="adminEmail"
+      type="email"
+      placeholder="Admin Email"
+      style="width:100%;padding:12px;margin:8px 0;border:1px solid #ccc;border-radius:8px;"
+    >
+
+    <input
+      id="adminPassword"
+      type="password"
+      placeholder="Password"
+      style="width:100%;padding:12px;margin:8px 0;border:1px solid #ccc;border-radius:8px;"
+    >
+
+    <button onclick="adminLogin()" style="
+      width:100%;
+      padding:12px;
+      margin-top:8px;
+      border:0;
+      border-radius:8px;
+      background:#1769aa;
+      color:white;
+      font-size:16px;
+    ">
+      🔑 Login
+    </button>
+
+    <div id="adminLoginResult" style="margin-top:12px;"></div>
+  </div>
+
+  <div id="adminNoticeBox" style="display:none;">
+
+    <div style="
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      margin-bottom:15px;
+    ">
+      <h3 style="margin:0;">📢 Notice डालें</h3>
+
+      <button onclick="adminLogout()" style="
+        padding:8px 12px;
+        border:0;
+        border-radius:7px;
+        background:#dc3545;
+        color:white;
+      ">
+        Logout
+      </button>
+    </div>
+
+    <input
+      id="noticeTitle"
+      type="text"
+      placeholder="Notice का Title"
+      style="width:100%;padding:12px;margin:8px 0;border:1px solid #ccc;border-radius:8px;"
+    >
+
+    <textarea
+      id="noticeContent"
+      placeholder="Notice की पूरी जानकारी लिखें..."
+      rows="6"
+      style="width:100%;padding:12px;margin:8px 0;border:1px solid #ccc;border-radius:8px;"
+    ></textarea>
+
+    <button onclick="publishNotice()" style="
+      width:100%;
+      padding:12px;
+      margin-top:8px;
+      border:0;
+      border-radius:8px;
+      background:#198754;
+      color:white;
+      font-size:16px;
+    ">
+      📢 Notice Publish करें
+    </button>
+
+    <div id="noticeResult" style="margin-top:12px;"></div>
+
+  </div>
+</section>
+
+<script>
+let adminAccessToken = null;
+let adminUser = null;
+
+/* ADMIN LOGIN */
+async function adminLogin(){
+
+  const email =
+    document.getElementById("adminEmail").value.trim();
+
+  const password =
+    document.getElementById("adminPassword").value;
+
+  const result =
+    document.getElementById("adminLoginResult");
+
+  if(!email || !password){
+    result.innerHTML =
+      "⚠️ Email और Password डालें।";
+    return;
+  }
+
+  result.innerHTML = "⏳ Login हो रहा है...";
+
+  try{
+
+    const response = await fetch(
+      SUPABASE_URL + "/auth/v1/token?grant_type=password",
+      {
+        method:"POST",
+        headers:{
+          "apikey":SUPABASE_ANON_KEY,
+          "Content-Type":"application/json"
+        },
+        body:JSON.stringify({
+          email:email,
+          password:password
+        })
+      }
+    );
+
+    const data = await response.json();
+
+    if(!response.ok){
+      result.innerHTML =
+        "❌ Login failed: " +
+        escapeHTML(data.error_description || data.msg || "गलत जानकारी");
+      return;
+    }
+
+    adminAccessToken = data.access_token;
+    adminUser = data.user;
+
+    /* CHECK ADMIN */
+    const adminResponse = await fetch(
+      SUPABASE_URL +
+      "/rest/v1/admin_users?user_id=eq." +
+      encodeURIComponent(adminUser.id) +
+      "&is_admin=eq.true&select=user_id",
+      {
+        method:"GET",
+        headers:{
+          "apikey":SUPABASE_ANON_KEY,
+          "Authorization":"Bearer " + adminAccessToken
+        }
+      }
+    );
+
+    const admins = await adminResponse.json();
+
+    if(!adminResponse.ok || !admins.length){
+
+      adminAccessToken = null;
+      adminUser = null;
+
+      result.innerHTML =
+        "❌ इस account को Admin permission नहीं मिली है।";
+
+      return;
+    }
+
+    document.getElementById("adminLoginBox").style.display="none";
+    document.getElementById("adminNoticeBox").style.display="block";
+
+    result.innerHTML="";
+
+  }catch(error){
+
+    result.innerHTML =
+      "❌ Error: " + escapeHTML(error.message);
+  }
+}
+
+
+/* PUBLISH NOTICE */
+async function publishNotice(){
+
+  const title =
+    document.getElementById("noticeTitle").value.trim();
+
+  const content =
+    document.getElementById("noticeContent").value.trim();
+
+  const result =
+    document.getElementById("noticeResult");
+
+  if(!title || !content){
+
+    result.innerHTML =
+      "⚠️ Title और Notice दोनों भरें।";
+
+    return;
+  }
+
+  if(!adminAccessToken){
+
+    result.innerHTML =
+      "⚠️ पहले Admin Login करें।";
+
+    return;
+  }
+
+  result.innerHTML =
+    "⏳ Notice publish हो रहा है...";
+
+  try{
+
+    const response = await fetch(
+      SUPABASE_URL + "/rest/v1/notices",
+      {
+        method:"POST",
+        headers:{
+          "apikey":SUPABASE_ANON_KEY,
+          "Authorization":"Bearer " + adminAccessToken,
+          "Content-Type":"application/json",
+          "Prefer":"return=minimal"
+        },
+        body:JSON.stringify({
+          title:title,
+          content:content
+        })
+      }
+    );
+
+    if(!response.ok){
+
+      const errorData = await response.text();
+
+      result.innerHTML =
+        "❌ Notice publish नहीं हुआ।";
+
+      console.log(errorData);
+
+      return;
+    }
+
+    result.innerHTML =
+      "✅ Notice सफलतापूर्वक Publish हो गया।";
+
+    document.getElementById("noticeTitle").value="";
+    document.getElementById("noticeContent").value="";
+
+  }catch(error){
+
+    result.innerHTML =
+      "❌ Error: " + escapeHTML(error.message);
+  }
+}
+
+
+/* LOGOUT */
+function adminLogout(){
+
+  adminAccessToken=null;
+  adminUser=null;
+
+  document.getElementById("adminLoginBox").style.display="block";
+  document.getElementById("adminNoticeBox").style.display="none";
+
+  document.getElementById("adminEmail").value="";
+  document.getElementById("adminPassword").value="";
+}
+
+
+/* SAFE HTML */
+function escapeHTML(value){
+
+  if(value===null || value===undefined){
+    return "";
+  }
+
+  return String(value)
+    .replace(/&/g,"&amp;")
+    .replace(/</g,"&lt;")
+    .replace(/>/g,"&gt;")
+    .replace(/"/g,"&quot;")
+    .replace(/'/g,"&#039;");
+}
+  </script>
 </body>
 </html>
