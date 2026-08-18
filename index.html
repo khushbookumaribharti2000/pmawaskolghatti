@@ -1046,11 +1046,12 @@ console.log("ADMIN ROWS:", admins);
       adminUser = null;
 
       result.innerHTML =
-        result.innerHTML =
-"❌ Admin permission नहीं मिली। Status: " +
-adminResponse.status +
-" | Rows: " +
-admins.length;
+  "❌ Admin check failed. Status: " +
+  adminResponse.status +
+  " | Response: " +
+  JSON.stringify(admins);
+        
+
 
       return;
     }
