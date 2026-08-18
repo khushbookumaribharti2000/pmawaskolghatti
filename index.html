@@ -1038,7 +1038,8 @@ async function adminLogin(){
     );
 
     const admins = await adminResponse.json();
-
+console.log("ADMIN STATUS:", adminResponse.status);
+console.log("ADMIN ROWS:", admins);
     if(!adminResponse.ok || !admins.length){
 
       adminAccessToken = null;
