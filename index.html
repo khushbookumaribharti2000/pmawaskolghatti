@@ -472,6 +472,89 @@ PM Awas Kolghatti Society की नई सूचना यहाँ
 
 </section>
 
+<section id="maintenance">
+
+<h2>💰 Monthly Maintenance Payment</h2>
+
+<p>
+मासिक मेंटेनेंस शुल्क:
+<strong>₹250</strong>
+</p>
+
+<p class="small">
+मेंटेनेंस प्रारंभ: अगस्त 2026
+</p>
+
+<label>लाभुक का नाम चुनें</label>
+
+<select id="maintenanceBeneficiary">
+  <option value="">लाभुक चुनें</option>
+</select>
+
+<div id="maintenanceDetails"
+style="display:none;margin-top:18px;">
+
+<div class="notice">
+
+<p>
+<strong>लाभुक:</strong>
+<span id="maintenanceName"></span>
+</p>
+
+<p>
+<strong>ब्लॉक:</strong>
+<span id="maintenanceBlock"></span>
+</p>
+
+<p>
+<strong>फ्लैट नंबर:</strong>
+<span id="maintenanceFlat"></span>
+</p>
+
+<hr>
+
+<p>
+<strong>बकाया माह:</strong>
+<span id="maintenanceMonths"></span>
+</p>
+
+<p>
+<strong>मासिक शुल्क:</strong> ₹250
+</p>
+
+<p>
+<strong>कुल देय:</strong>
+₹<span id="maintenanceTotal"></span>
+</p>
+
+<p>
+<strong>पहले भुगतान:</strong>
+₹<span id="maintenancePaid"></span>
+</p>
+
+<h3>
+💰 बाकी भुगतान:
+₹<span id="maintenanceBalance"></span>
+</h3>
+
+</div>
+
+<button
+id="maintenancePayButton"
+onclick="startMaintenancePayment()"
+style="width:100%;background:#198754;"
+>
+💳 Pay Now
+</button>
+
+<div id="maintenanceMessage"
+style="margin-top:15px;">
+</div>
+
+</div>
+
+</section>
+
 <section id="contact">
 
 <h2>📞 Contact / संपर्क</h2>
