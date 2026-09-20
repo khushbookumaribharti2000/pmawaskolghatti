@@ -955,7 +955,305 @@ return String(value)
 }
 
 loadBeneficiaries();
+<script>
 
+/* ================= MAINTENANCE SYSTEM ================= */
+
+const MAINTENANCE_RATE = 250;
+const MAINTENANCE_START_YEAR = 2026;
+const MAINTENANCE_START_MONTH = 7; // August = 7
+
+let maintenancePerson = null;
+
+
+/* Beneficiary dropdown भरना */
+
+function setupMaintenanceDropdown(){
+
+  const select =
+    document.getElementById("maintenanceBeneficiary");
+
+  if(!select || !beneficiaries.length) return;
+
+  select.innerHTML =
+    '<option value="">लाभुक चुनें</option>';
+
+  beneficiaries.forEach((person,index)=>{
+
+    const option =
+      document.createElement("option");
+
+    option.value = index;
+
+    option.textContent =
+      (person.beneficiary_name || "") +
+      " — Block " +
+      (person.block || "") +
+      " / Flat " +
+      (person.flat_number || "");
+
+    select.appendChild(option);
+
+  });
+
+}
+
+
+/* नाम चुनने पर जानकारी */
+
+document.addEventListener("change",function(e){
+
+  if(e.target.id !== "maintenanceBeneficiary") return;
+
+  const index = e.target.value;
+
+  const details =
+    document.getElementById("maintenanceDetails");
+
+  if(index === ""){
+
+    details.style.display="none";
+
+    maintenancePerson=null;
+
+    return;
+  }
+
+  maintenancePerson =
+    beneficiaries[index];
+
+  document.getElementById("maintenanceName")
+    .textContent =
+    maintenancePerson.beneficiary_name || "";
+
+  document.getElementById("maintenanceBlock")
+    .textContent =
+    maintenancePerson.block || "";
+
+  document.getElementById("maintenanceFlat")
+    .textContent =
+    maintenancePerson.flat_number || "";
+
+  details.style.display="block";
+
+  calculateMaintenance();
+
+});
+
+
+/* अगस्त 2026 से कितने महीने */
+
+function getMaintenanceMonths(){
+
+  const start =
+    new Date(
+      MAINTENANCE_START_YEAR,
+      MAINTENANCE_START_MONTH,
+      1
+    );
+
+  const now = new Date();
+
+  const current =
+    new Date(
+      now.getFullYear(),
+      now.getMonth(),
+      1
+    );
+
+  if(current < start) return 0;
+
+  return (
+    (current.getFullYear() -
+      start.getFullYear()) * 12
+    +
+    (current.getMonth() -
+      start.getMonth()) + 1
+  );
+
+}
+
+
+/* Database से payment निकालना */
+
+async function calculateMaintenance(){
+
+  if(!maintenancePerson) return;
+
+  const message =
+    document.getElementById(
+      "maintenanceMessage"
+    );
+
+  message.innerHTML =
+    "⏳ भुगतान विवरण देखा जा रहा है...";
+
+  try{
+
+    const flat =
+      maintenancePerson.flat_number;
+
+    const response =
+      await fetch(
+        SUPABASE_URL +
+        "/rest/v1/maintenance_payments" +
+        "?select=amount,payment_status" +
+        "&flat_number=eq." +
+        encodeURIComponent(flat) +
+        "&payment_status=eq.SUCCESS",
+        {
+          method:"GET",
+
+          headers:{
+            "apikey":SUPABASE_ANON_KEY,
+            "Authorization":
+              "Bearer " +
+              SUPABASE_ANON_KEY
+          }
+        }
+      );
+
+    const payments =
+      await response.json();
+
+    if(!response.ok){
+
+      throw new Error(
+        JSON.stringify(payments)
+      );
+
+    }
+
+    const months =
+      getMaintenanceMonths();
+
+    const totalDue =
+      months * MAINTENANCE_RATE;
+
+    let paid = 0;
+
+    payments.forEach(function(payment){
+
+      paid +=
+        Number(payment.amount || 0);
+
+    });
+
+    const balance =
+      Math.max(
+        0,
+        totalDue - paid
+      );
+
+    document.getElementById(
+      "maintenanceMonths"
+    ).textContent = months;
+
+    document.getElementById(
+      "maintenanceTotal"
+    ).textContent =
+      totalDue.toLocaleString("en-IN");
+
+    document.getElementById(
+      "maintenancePaid"
+    ).textContent =
+      paid.toLocaleString("en-IN");
+
+    document.getElementById(
+      "maintenanceBalance"
+    ).textContent =
+      balance.toLocaleString("en-IN");
+
+    const button =
+      document.getElementById(
+        "maintenancePayButton"
+      );
+
+    if(balance === 0){
+
+      button.disabled=true;
+
+      button.textContent =
+        "✅ कोई बकाया नहीं";
+
+      button.style.background =
+        "#6b7280";
+
+      message.innerHTML =
+        "✅ इस लाभुक का अभी कोई बकाया नहीं है।";
+
+    }else{
+
+      button.disabled=false;
+
+      button.textContent =
+        "💳 ₹" +
+        balance.toLocaleString("en-IN") +
+        " Pay Now";
+
+      button.style.background =
+        "#198754";
+
+      message.innerHTML = "";
+
+    }
+
+  }catch(error){
+
+    message.innerHTML =
+      "<div class='error'>" +
+      "❌ Payment details load नहीं हो पाई।<br>" +
+      escapeHTML(error.message) +
+      "</div>";
+
+  }
+
+}
+
+
+/* Payment button */
+
+function startMaintenancePayment(){
+
+  if(!maintenancePerson){
+
+    alert("पहले लाभुक चुनें।");
+
+    return;
+
+  }
+
+  const amount =
+    document.getElementById(
+      "maintenanceBalance"
+    ).textContent;
+
+  alert(
+    "अभी Payment Gateway connect नहीं है।\n\n" +
+    "कुल भुगतान: ₹" +
+    amount +
+    "\n\n" +
+    "अगले चरण में Razorpay payment जोड़ेंगे।"
+  );
+
+}
+
+
+/* Beneficiary data आने के बाद dropdown */
+
+const originalLoadBeneficiaries =
+  loadBeneficiaries;
+
+loadBeneficiaries =
+async function(){
+
+  await originalLoadBeneficiaries();
+
+  setupMaintenanceDropdown();
+
+};
+
+</script>
 </script>
 <!-- ================= ADMIN PANEL ================= -->
 <section id="adminPanel" style="
