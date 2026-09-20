@@ -821,7 +821,45 @@ tableWrapper.style.display="block";
 
 displayData(beneficiaries);
 
-setupMaintenanceDropdown();
+function setupMaintenanceDropdown(){
+
+  const select = document.getElementById("maintenanceBeneficiary");
+
+  if(!select) return;
+
+  select.innerHTML = "";
+
+  const firstOption = document.createElement("option");
+  firstOption.value = "";
+  firstOption.textContent = "लाभुक चुनें";
+  select.appendChild(firstOption);
+
+  if(!Array.isArray(beneficiaries) || beneficiaries.length === 0){
+    const option = document.createElement("option");
+    option.value = "";
+    option.textContent = "लाभुक सूची उपलब्ध नहीं है";
+    select.appendChild(option);
+    return;
+  }
+
+  beneficiaries.forEach((person, index) => {
+
+    const option = document.createElement("option");
+
+    option.value = index;
+
+    option.textContent =
+      (person.beneficiary_name || "नाम नहीं") +
+      " — Block " +
+      (person.block || "") +
+      " / Flat " +
+      (person.flat_number || "");
+
+    select.appendChild(option);
+
+  });
+
+}
 
 }catch(error){
 
