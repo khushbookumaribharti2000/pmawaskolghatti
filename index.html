@@ -973,6 +973,47 @@ function setupMaintenanceDropdown(){
   const select =
     document.getElementById("maintenanceBeneficiary");
 
+  if(!select){
+    alert("❌ Maintenance dropdown नहीं मिला");
+    return;
+  }
+
+  if(!beneficiaries || beneficiaries.length === 0){
+    alert("❌ Beneficiary data खाली है");
+    return;
+  }
+
+  select.innerHTML =
+    '<option value="">लाभुक चुनें</option>';
+
+  beneficiaries.forEach((person,index)=>{
+
+    const option =
+      document.createElement("option");
+
+    option.value = index;
+
+    option.textContent =
+      (person.beneficiary_name || "नाम नहीं") +
+      " — Block " +
+      (person.block || "") +
+      " / Flat " +
+      (person.flat_number || "");
+
+    select.appendChild(option);
+
+  });
+
+  alert(
+    "✅ " +
+    beneficiaries.length +
+    " लाभुक dropdown में जोड़ दिए गए।"
+  );
+}
+
+  const select =
+    document.getElementById("maintenanceBeneficiary");
+
   if(!select || !beneficiaries.length) return;
 
   select.innerHTML =
