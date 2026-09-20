@@ -1267,12 +1267,9 @@ async function calculateMaintenance(){
 
     let paid = 0;
 
-    data.forEach(
-      function(payment){
-paid +=
-          Number(payment.amount || 0);
-      }
-    );
+    dapayments.forEach(function(payment){
+  paid += Number(payment.amount || 0);
+});
 
     const balance =
       Math.max(totalDue - paid, 0);
