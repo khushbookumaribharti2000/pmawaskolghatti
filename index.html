@@ -955,6 +955,18 @@ return String(value)
 }
 
 loadBeneficiaries();
+  setTimeout(function(){
+
+  const select =
+    document.getElementById("maintenanceBeneficiary");
+
+  if(select && beneficiaries && beneficiaries.length){
+
+    setupMaintenanceDropdown();
+
+  }
+
+}, 2000);
 <script>
 
 /* ================= MAINTENANCE SYSTEM ================= */
