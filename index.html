@@ -1707,7 +1707,7 @@ async function calculateMaintenance(){
 
     let paid = 0;
 
-    payments.forEach(function(payment){
+    data.forEach(function(payment){
 
       paid +=
         Number(payment.amount || 0);
