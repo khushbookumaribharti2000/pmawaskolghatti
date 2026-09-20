@@ -814,14 +814,14 @@ response.status
 
 }
 
-beneficiaries =
-await response.json();
+beneficiaries = await response.json();
 
 loading.style.display="none";
-
 tableWrapper.style.display="block";
 
 displayData(beneficiaries);
+
+setupMaintenanceDropdown();
 
 }catch(error){
 
