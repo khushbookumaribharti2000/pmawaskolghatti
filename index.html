@@ -675,337 +675,726 @@ style="display:none;">
 
 <script>
 
+const <script>
+
 const SUPABASE_URL =
 "https://cmzqcqrptqjbxugagnue.supabase.co";
 
 const SUPABASE_ANON_KEY =
 "sb_publishable_-QGSDfNjeHdCY_IpyQt12Q_c-Exsvyt";
 
-let beneficiaries=[];
+let beneficiaries = [];
+let maintenancePerson = null;
+
+const MAINTENANCE_RATE = 250;
+const MAINTENANCE_START_YEAR = 2026;
+const MAINTENANCE_START_MONTH = 7;
+
+function escapeHTML(value){
+  if(value === null || value === undefined) return "";
+
+  return String(value)
+    .replace(/&/g,"&amp;")
+    .replace(/</g,"&lt;")
+    .replace(/>/g,"&gt;")
+    .replace(/"/g,"&quot;")
+    .replace(/'/g,"&#039;");
+}
+
+
+/* =========================
+   COMPLAINT
+========================= */
 
 async function submitComplaint(){
 
-const name =
-document.getElementById("complaintName").value.trim();
+  const name =
+    document.getElementById("complaintName").value.trim();
 
-const mobile =
-document.getElementById("complaintMobile").value.trim();
+  const mobile =
+    document.getElementById("complaintMobile").value.trim();
 
-const block =
-document.getElementById("complaintBlock").value;
+  const block =
+    document.getElementById("complaintBlock").value;
 
-const subject =
-document.getElementById("complaintSubject").value;
+  const subject =
+    document.getElementById("complaintSubject").value;
 
-const text =
-document.getElementById("complaintText").value.trim();
+  const complaintText =
+    document.getElementById("complaintText").value.trim();
 
-const result =
-document.getElementById("complaintResult");
+  const result =
+    document.getElementById("complaintResult");
 
-if(!name || !mobile || !block || !subject || !text){
+  if(!name || !mobile || !block || !subject || !complaintText){
 
-result.style.display="block";
+    result.style.display = "block";
 
-result.innerHTML =
-"⚠️ कृपया सभी आवश्यक जानकारी भरें।";
+    result.innerHTML =
+      "⚠️ कृपया सभी आवश्यक जानकारी भरें।";
 
-return;
-}
-
-const id =
-"PK-"+String(Date.now()).slice(-6);
-await fetch(SUPABASE_URL + "/rest/v1/complaints", {
-  method: "POST",
-  headers: {
-    "apikey": SUPABASE_ANON_KEY,
-    "Authorization": "Bearer " + SUPABASE_ANON_KEY,
-    "Content-Type": "application/json",
-    "Prefer": "return=minimal"
-  },
-  body: JSON.stringify({
-    complaint_id: id,
-    name: name,
-    mobile: mobile,
-    block: block,
-    subject: subject,
-    description: text
-  })
-});
-result.style.display="block";
-
-result.innerHTML =
-"<strong>✅ शिकायत दर्ज करने के लिए तैयार है</strong><br><br>"+
-"Complaint ID: <strong>"+escapeHTML(id)+
-"</strong><br><br>"+
-"<span class='small'>"+
-"Database जोड़ने के बाद यही ID आपकी शिकायत के साथ स्थायी रूप से सेव होगी।"+
-"</span>";
-
-}
-
-function trackComplaint(){
-
-const id =
-document.getElementById("trackId")
-.value.trim()
-.toUpperCase();
-
-const result =
-document.getElementById("trackResult");
-
-result.style.display="block";
-
-if(!id){
-
-result.innerHTML="⚠️ Complaint ID डालें।";
-
-return;
-
-}
-
-result.innerHTML =
-"<strong>Complaint ID:</strong> "+
-escapeHTML(id)+
-"<br><br>"+
-"<strong>स्थिति:</strong> 🟡 जांच में"+
-"<br><br>"+
-"<strong>Action Taken:</strong> "+
-"Database जोड़ने के बाद वास्तविक शिकायत की स्थिति यहाँ दिखाई जाएगी।";
-
-}
-
-async function loadBeneficiaries(){
-
-const loading =
-document.getElementById("loading");
-
-const tableWrapper =
-document.getElementById("tableWrapper");
-
-const errorBox =
-document.getElementById("errorBox");
-
-try{
-
-const url =
-SUPABASE_URL+
-"/rest/v1/Beneficiary?select=beneficiary_name,father_husband_name,sex,block,flat_number&order=beneficiary_name.asc";
-
-const response =
-await fetch(url,{
-
-method:"GET",
-
-headers:{
-"apikey":SUPABASE_ANON_KEY,
-"Authorization":
-"Bearer "+SUPABASE_ANON_KEY
-}
-
-});
-
-if(!response.ok){
-
-throw new Error(
-"Supabase error: "+
-response.status
-);
-
-}
-
-beneficiaries = await response.json();
-
-loading.style.display="none";
-tableWrapper.style.display="block";
-
-displayData(beneficiaries);
-
-function setupMaintenanceDropdown(){
-
-  const select = document.getElementById("maintenanceBeneficiary");
-
-  if(!select) return;
-
-  select.innerHTML = "";
-
-  const firstOption = document.createElement("option");
-  firstOption.value = "";
-  firstOption.textContent = "लाभुक चुनें";
-  select.appendChild(firstOption);
-
-  if(!Array.isArray(beneficiaries) || beneficiaries.length === 0){
-    const option = document.createElement("option");
-    option.value = "";
-    option.textContent = "लाभुक सूची उपलब्ध नहीं है";
-    select.appendChild(option);
     return;
   }
 
-  beneficiaries.forEach((person, index) => {
+  const id =
+    "PK-" + String(Date.now()).slice(-6);
 
-    const option = document.createElement("option");
+  try{
 
-    option.value = index;
+    const response =
+      await fetch(
+        SUPABASE_URL + "/rest/v1/complaints",
+        {
+          method:"POST",
 
-    option.textContent =
-      (person.beneficiary_name || "नाम नहीं") +
-      " — Block " +
-      (person.block || "") +
-      " / Flat " +
-      (person.flat_number || "");
+          headers:{
+            "apikey":SUPABASE_ANON_KEY,
+            "Authorization":
+              "Bearer " + SUPABASE_ANON_KEY,
+            "Content-Type":"application/json",
+            "Prefer":"return=minimal"
+          },
 
-    select.appendChild(option);
+          body:JSON.stringify({
+            complaint_id:id,
+            name:name,
+            mobile:mobile,
+            block:block,
+            subject:subject,
+            description:complaintText
+          })
+        }
+      );
 
-  });
+    if(!response.ok){
+      throw new Error("Complaint save error: " + response.status);
+    }
 
+    result.style.display = "block";
+
+    result.innerHTML =
+      "<strong>✅ शिकायत सफलतापूर्वक दर्ज हो गई।</strong>" +
+      "<br><br>" +
+      "Complaint ID: <strong>" +
+      escapeHTML(id) +
+      "</strong>";
+
+  }catch(error){
+
+    result.style.display = "block";
+
+    result.innerHTML =
+      "❌ शिकायत सेव नहीं हुई।<br>" +
+      escapeHTML(error.message);
+  }
 }
 
-}catch(error){
 
-loading.style.display="none";
+/* =========================
+   TRACK COMPLAINT
+========================= */
 
-errorBox.innerHTML =
-"<div class='error'>"+
-"<strong>Data load नहीं हो पाया।</strong>"+
-"<br><br>"+
-escapeHTML(error.message)+
-"</div>";
+function trackComplaint(){
 
+  const id =
+    document.getElementById("trackId")
+      .value
+      .trim()
+      .toUpperCase();
+
+  const result =
+    document.getElementById("trackResult");
+
+  result.style.display = "block";
+
+  if(!id){
+
+    result.innerHTML =
+      "⚠️ Complaint ID डालें।";
+
+    return;
+  }
+
+  result.innerHTML =
+    "<strong>Complaint ID:</strong> " +
+    escapeHTML(id) +
+    "<br><br>" +
+    "<strong>स्थिति:</strong> 🟡 जांच में";
 }
 
-}
 
-function displayData(data){
+/* =========================
+   MAINTENANCE DROPDOWN
+========================= */
 
-const table =
-document.getElementById("beneficiaryTable");
-
-const count =
-document.getElementById("count");
-
-table.innerHTML="";
-
-count.innerText =
-"कुल Beneficiaries: "+data.length;
-
-if(data.length===0){
-
-table.innerHTML =
-"<tr><td colspan='6' style='text-align:center;padding:30px;'>"+
-"कोई रिकॉर्ड नहीं मिला।"+
-"</td></tr>";
-
-return;
-
-}
-
-data.forEach((person,index)=>{
-
-const row =
-document.createElement("tr");
-
-row.innerHTML=
-
-"<td>"+(index+1)+"</td>"+
-
-"<td>"+
-escapeHTML(person.beneficiary_name)+
-"</td>"+
-
-"<td>"+
-escapeHTML(person.father_husband_name)+
-"</td>"+
-
-"<td>"+
-escapeHTML(person.sex)+
-"</td>"+
-
-"<td>"+
-escapeHTML(person.block)+
-"</td>"+
-
-"<td>"+
-escapeHTML(person.flat_number)+
-"</td>";
-
-table.appendChild(row);
-
-});
-
-}
-
-document
-.getElementById("searchInput")
-.addEventListener("input",function(){
-
-const search =
-this.value.trim().toLowerCase();
-
-if(search===""){
-
-displayData(beneficiaries);
-
-return;
-
-}
-
-const filtered =
-beneficiaries.filter(person=>{
-
-const fields=[
-
-person.beneficiary_name,
-person.father_husband_name,
-person.sex,
-person.block,
-person.flat_number
-
-].map(v=>
-(v||"").toLowerCase()
-);
-
-return fields.some(v=>
-v.includes(search)
-);
-
-});
-
-displayData(filtered);
-
-});
-
-function escapeHTML(value){
-
-if(value===null ||
-value===undefined)
-
-return "";
-
-return String(value)
-
-.replace(/&/g,"&amp;")
-.replace(/</g,"&lt;")
-.replace(/>/g,"&gt;")
-.replace(/"/g,"&quot;")
-.replace(/'/g,"&#039;");
-
-}
-
-loadBeneficiaries();
-  setTimeout(function(){
+function setupMaintenanceDropdown(){
 
   const select =
     document.getElementById("maintenanceBeneficiary");
 
-  if(select && beneficiaries && beneficiaries.length){
+  if(!select){
+    return;
+  }
+
+  select.innerHTML =
+    '<option value="">लाभुक चुनें</option>';
+
+  if(
+    !Array.isArray(beneficiaries) ||
+    beneficiaries.length === 0
+  ){
+
+    const option =
+      document.createElement("option");
+
+    option.value = "";
+    option.textContent =
+      "लाभुक सूची उपलब्ध नहीं है";
+
+    select.appendChild(option);
+
+    return;
+  }
+
+  beneficiaries.forEach(
+    function(person,index){
+
+      const option =
+        document.createElement("option");
+
+      option.value = index;
+
+      option.textContent =
+        (person.beneficiary_name || "नाम नहीं") +
+        " — Block " +
+        (person.block || "") +
+        " / Flat " +
+        (person.flat_number || "");
+
+      select.appendChild(option);
+    }
+  );
+}
+
+
+/* =========================
+   LOAD BENEFICIARIES
+========================= */
+
+async function loadBeneficiaries(){
+
+  const loading =
+    document.getElementById("loading");
+
+  const tableWrapper =
+    document.getElementById("tableWrapper");
+
+  const errorBox =
+    document.getElementById("errorBox");
+
+  try{
+
+    const url =
+      SUPABASE_URL +
+      "/rest/v1/Beneficiary" +
+      "?select=beneficiary_name,father_husband_name,sex,block,flat_number" +
+      "&order=beneficiary_name.asc";
+
+    const response =
+      await fetch(
+        url,
+        {
+          method:"GET",
+
+          headers:{
+            "apikey":SUPABASE_ANON_KEY,
+            "Authorization":
+              "Bearer " + SUPABASE_ANON_KEY
+          }
+        }
+      );
+
+    if(!response.ok){
+
+      const errorText =
+        await response.text();
+
+      throw new Error(
+        "Supabase error: " +
+        response.status +
+        " " +
+        errorText
+      );
+    }
+
+    beneficiaries =
+      await response.json();
+
+    console.log(
+      "Beneficiaries loaded:",
+      beneficiaries.length
+    );
+
+    if(loading){
+      loading.style.display = "none";
+    }
+
+    if(tableWrapper){
+      tableWrapper.style.display = "block";
+    }
+
+    displayData(beneficiaries);
 
     setupMaintenanceDropdown();
 
+  }catch(error){
+
+    console.error(error);
+
+    if(loading){
+      loading.style.display = "none";
+    }
+
+    if(errorBox){
+
+      errorBox.innerHTML =
+        "<div class='error'>" +
+        "<strong>Data load नहीं हो पाया।</strong>" +
+        "<br><br>" +
+        escapeHTML(error.message) +
+        "</div>";
+    }
+  }
+}
+
+
+/* =========================
+   DISPLAY BENEFICIARIES
+========================= */
+
+function displayData(data){
+
+  const table =
+    document.getElementById("beneficiaryTable");
+
+  const count =
+    document.getElementById("count");
+
+  if(!table || !count){
+    return;
   }
 
-}, 2000);
-<script>
+  table.innerHTML = "";
+
+  count.innerText =
+    "कुल Beneficiaries: " +
+    data.length;
+
+  if(data.length === 0){
+
+    table.innerHTML =
+      "<tr>" +
+      "<td colspan='6' style='text-align:center;padding:30px;'>" +
+      "कोई रिकॉर्ड नहीं मिला।" +
+      "</td>" +
+      "</tr>";
+
+    return;
+  }
+
+  data.forEach(
+    function(person,index){
+
+      const row =
+        document.createElement("tr");
+
+      row.innerHTML =
+
+        "<td>" +
+        (index + 1) +
+        "</td>" +
+
+        "<td>" +
+        escapeHTML(person.beneficiary_name) +
+        "</td>" +
+
+        "<td>" +
+        escapeHTML(person.father_husband_name) +
+        "</td>" +
+
+        "<td>" +
+        escapeHTML(person.sex) +
+        "</td>" +
+
+        "<td>" +
+        escapeHTML(person.block) +
+        "</td>" +
+
+        "<td>" +
+        escapeHTML(person.flat_number) +
+        "</td>";
+
+      table.appendChild(row);
+    }
+  );
+}
+
+
+/* =========================
+   SEARCH
+========================= */
+
+const searchInput =
+  document.getElementById("searchInput");
+
+if(searchInput){
+
+  searchInput.addEventListener(
+    "input",
+    function(){
+
+      const search =
+        this.value
+          .trim()
+          .toLowerCase();
+
+      if(search === ""){
+
+        displayData(beneficiaries);
+        return;
+      }
+
+      const filtered =
+        beneficiaries.filter(
+          function(person){
+
+            const fields = [
+
+              person.beneficiary_name,
+              person.father_husband_name,
+              person.sex,
+              person.block,
+              person.flat_number
+
+            ].map(
+              function(value){
+
+                return String(
+                  value || ""
+                ).toLowerCase();
+              }
+            );
+
+            return fields.some(
+              function(value){
+
+                return value.includes(search);
+              }
+            );
+          }
+        );
+
+      displayData(filtered);
+    }
+  );
+}
+
+
+/* =========================
+   MAINTENANCE SELECTION
+========================= */
+
+document.addEventListener(
+  "change",
+  function(event){
+
+    if(
+      event.target.id !==
+      "maintenanceBeneficiary"
+    ){
+      return;
+    }
+
+    const index =
+      event.target.value;
+
+    const details =
+      document.getElementById(
+        "maintenanceDetails"
+      );
+
+    if(index === ""){
+
+      if(details){
+        details.style.display = "none";
+      }
+
+      maintenancePerson = null;
+
+      return;
+    }
+
+    maintenancePerson =
+      beneficiaries[Number(index)];
+
+    if(!maintenancePerson){
+      return;
+    }
+
+    document.getElementById(
+      "maintenanceName"
+    ).textContent =
+      maintenancePerson.beneficiary_name || "";
+
+    document.getElementById(
+      "maintenanceBlock"
+    ).textContent =
+      maintenancePerson.block || "";
+
+    document.getElementById(
+      "maintenanceFlat"
+    ).textContent =
+      maintenancePerson.flat_number || "";
+
+    if(details){
+      details.style.display = "block";
+    }
+
+    calculateMaintenance();
+  }
+);
+
+
+/* =========================
+   MONTH CALCULATION
+========================= */
+
+function getMaintenanceMonths(){
+
+  const start =
+    new Date(
+      MAINTENANCE_START_YEAR,
+      MAINTENANCE_START_MONTH,
+      1
+    );
+
+  const now =
+    new Date();
+
+  const current =
+    new Date(
+      now.getFullYear(),
+      now.getMonth(),
+      1
+    );
+
+  if(current < start){
+    return 0;
+  }
+
+  return (
+    (
+      current.getFullYear() -
+      start.getFullYear()
+    ) * 12
+    +
+    (
+      current.getMonth() -
+      start.getMonth()
+    ) + 1
+  );
+}
+
+
+/* =========================
+   MAINTENANCE CALCULATION
+========================= */
+
+async function calculateMaintenance(){
+
+  if(!maintenancePerson){
+    return;
+  }
+
+  const message =
+    document.getElementById(
+      "maintenanceMessage"
+    );
+
+  if(message){
+
+    message.innerHTML =
+      "⏳ भुगतान विवरण देखा जा रहा है...";
+  }
+
+  try{
+
+    const flat =
+      maintenancePerson.flat_number;
+
+    const url =
+      SUPABASE_URL +
+      "/rest/v1/maintenance_payments" +
+      "?select=amount,payment_status" +
+      "&flat_number=eq." +
+      encodeURIComponent(flat) +
+      "&payment_status=eq.SUCCESS";
+
+    const response =
+      await fetch(
+        url,
+        {
+          method:"GET",
+
+          headers:{
+            "apikey":SUPABASE_ANON_KEY,
+            "Authorization":
+              "Bearer " + SUPABASE_ANON_KEY
+          }
+        }
+      );
+
+    const data =
+      await response.json();
+
+    if(!response.ok){
+      throw new Error(JSON.stringify(data));
+    }
+
+    const months =
+      getMaintenanceMonths();
+
+    const totalDue =
+      months * MAINTENANCE_RATE;
+
+    let paid = 0;
+
+    data.forEach(
+      function(payment){
+
+        paid += Number(
+          payment.amount || 0
+        );
+      }
+    );
+
+    const balance =
+      Math.max(
+        0,
+        totalDue - paid
+      );
+
+    document.getElementById(
+      "maintenanceMonths"
+    ).textContent =
+      months;
+
+    document.getElementById(
+      "maintenanceTotal"
+    ).textContent =
+      totalDue.toLocaleString("en-IN");
+
+    document.getElementById(
+      "maintenancePaid"
+    ).textContent =
+      paid.toLocaleString("en-IN");
+
+    document.getElementById(
+      "maintenanceBalance"
+    ).textContent =
+      balance.toLocaleString("en-IN");
+
+    const button =
+      document.getElementById(
+        "maintenancePayButton"
+      );
+
+    if(balance <= 0){
+
+      button.disabled = true;
+
+      button.textContent =
+        "✅ कोई बकाया नहीं";
+
+      button.style.background =
+        "#6b7280";
+
+    }else{
+
+      button.disabled = false;
+
+      button.textContent =
+        "💳 ₹" +
+        balance.toLocaleString("en-IN") +
+        " Pay Now";
+
+      button.style.background =
+        "#198754";
+    }
+
+    if(message){
+      message.innerHTML = "";
+    }
+
+  }catch(error){
+
+    console.error(error);
+
+    if(message){
+
+      message.innerHTML =
+        "<div class='error'>" +
+        "❌ Payment details load नहीं हो पाई।<br>" +
+        escapeHTML(error.message) +
+        "</div>";
+    }
+  }
+}
+
+
+/* =========================
+   PAYMENT BUTTON
+========================= */
+
+function startMaintenancePayment(){
+
+  if(!maintenancePerson){
+
+    alert("पहले लाभुक चुनें।");
+    return;
+  }
+
+  const balance =
+    document.getElementById(
+      "maintenanceBalance"
+    ).textContent;
+
+  if(balance === "0"){
+
+    alert(
+      "इस लाभुक का कोई बकाया नहीं है।"
+    );
+
+    return;
+  }
+
+  alert(
+    "Online Payment Gateway अभी connect नहीं है।\n\n" +
+    "देय राशि: ₹" +
+    balance +
+    "\n\n" +
+    "अगले चरण में Razorpay जोड़कर वास्तविक payment और receipt की सुविधा जोड़ी जाएगी।"
+  );
+}
+
+
+/* =========================
+   START
+========================= */
+
+loadBeneficiaries();
+
+</script>
 
 /* ================= MAINTENANCE SYSTEM ================= */
 
