@@ -1269,7 +1269,104 @@ async function calculateMaintenance(){
 
     data.forEach(
       function(payment){
+paid +=
+          Number(payment.amount || 0);
+      }
+    );
 
+    const balance =
+      Math.max(totalDue - paid, 0);
+
+    const paidMonths =
+      Math.floor(
+        paid / MAINTENANCE_RATE
+      );
+
+    const unpaidMonths =
+      Math.max(months - paidMonths, 0);
+
+    const monthsText =
+      unpaidMonths > 0
+        ? unpaidMonths + " माह"
+        : "कोई बकाया नहीं";
+
+    document.getElementById(
+      "maintenanceMonths"
+    ).textContent =
+      monthsText;
+
+    document.getElementById(
+      "maintenanceTotal"
+    ).textContent =
+      totalDue.toFixed(2);
+
+    document.getElementById(
+      "maintenancePaid"
+    ).textContent =
+      paid.toFixed(2);
+
+    document.getElementById(
+      "maintenanceBalance"
+    ).textContent =
+      balance.toFixed(2);
+
+    if(message){
+      message.innerHTML =
+        balance > 0
+          ? "ℹ️ भुगतान करने के लिए नीचे Pay Now दबाएँ।"
+          : "✅ आपका भुगतान पूरा है।";
+    }
+
+  }catch(error){
+
+    console.error(
+      "Maintenance calculation error:",
+      error
+    );
+
+    if(message){
+      message.innerHTML =
+        "❌ भुगतान विवरण प्राप्त नहीं हो पाया।<br>" +
+        escapeHTML(error.message);
+    }
+  }
+}
+
+
+/* =========================
+   PAYMENT
+========================= */
+
+function startMaintenancePayment(){
+
+  if(!maintenancePerson){
+    alert("पहले लाभुक चुनें।");
+    return;
+  }
+
+  const balance =
+    Number(
+      document.getElementById(
+        "maintenanceBalance"
+      ).textContent || 0
+    );
+
+  if(balance <= 0){
+    alert("इस लाभुक का कोई भुगतान बाकी नहीं है।");
+    return;
+  }
+
+  alert(
+    "Payment system अगले चरण में Razorpay से जोड़ा जाएगा।"
+  );
+}
+
+
+/* =========================
+   START
+========================= */
+
+loadBeneficiaries();
         paid += Number(
           payment.amount || 0
         );
