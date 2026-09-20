@@ -1813,22 +1813,6 @@ function startMaintenancePayment(){
 
 }
 
-
-/* Beneficiary data आने के बाद dropdown */
-
-const originalLoadBeneficiaries =
-  loadBeneficiaries;
-
-loadBeneficiaries =
-async function(){
-
-  await originalLoadBeneficiaries();
-
-  setupMaintenanceDropdown();
-
-};
-
-</script>
 </script>
 <!-- ================= ADMIN PANEL ================= -->
 <section id="adminPanel" style="
